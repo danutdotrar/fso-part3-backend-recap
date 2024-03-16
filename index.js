@@ -68,6 +68,19 @@ app.get("/api/persons/:id", (request, response) => {
     }
 });
 
+// @@ DELETE Request for single resource
+// @@ Route 'api/persons/:id'
+// @@ Response - 204 and .end() to transmit that no more data will be sent
+app.delete("/api/persons/:id", (request, response) => {
+    // get the id from the request.params.id
+    const id = Number(request.params.id);
+
+    // iterate over api and filter the person with the id === id from params
+    data = data.filter((person) => person.id !== id);
+
+    response.status(204).end();
+});
+
 // Define a port to listen to it
 const PORT = 3001;
 
