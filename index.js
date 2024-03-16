@@ -59,8 +59,13 @@ app.get("/api/persons/:id", (request, response) => {
     // find the resource in the api with the params id === resource id
     const singleResource = data.find((person) => person.id === id);
 
-    // show that singleResource with response.json()
-    response.json(singleResource);
+    // if the resource exists, send the json with that resource
+    if (singleResource) {
+        // show that singleResource with response.json()
+        response.json(singleResource);
+    } else {
+        response.status(404).end();
+    }
 });
 
 // Define a port to listen to it
