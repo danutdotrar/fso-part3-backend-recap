@@ -39,6 +39,17 @@ app.get("/api/persons", (request, response) => {
     response.json(data);
 });
 
+// @@ Route '/info'
+// @@ GET Request
+app.get("/info", (request, response) => {
+    const date = new Date();
+    const infoData = `<p>Phonebook has info for ${data.length} people</p>
+    <p>${date}</p>`;
+
+    // send the info data with the response
+    response.send(infoData);
+});
+
 // Define a port to listen to it
 const PORT = 3001;
 
