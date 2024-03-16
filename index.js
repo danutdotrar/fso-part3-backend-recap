@@ -39,8 +39,8 @@ app.get("/api/persons", (request, response) => {
     response.json(data);
 });
 
-// @@ Route '/info'
 // @@ GET Request
+// @@ Route '/info'
 app.get("/info", (request, response) => {
     const date = new Date();
     const infoData = `<p>Phonebook has info for ${data.length} people</p>
@@ -48,6 +48,19 @@ app.get("/info", (request, response) => {
 
     // send the info data with the response
     response.send(infoData);
+});
+
+// @@ GET Request for single resource
+// @@ Route '/api/persons/:id'
+app.get("/api/persons/:id", (request, response) => {
+    // get the id from the url params to search it in the api
+    const id = Number(request.params.id);
+
+    // find the resource in the api with the params id === resource id
+    const singleResource = data.find((person) => person.id === id);
+
+    // show that singleResource with response.json()
+    response.json(singleResource);
 });
 
 // Define a port to listen to it
