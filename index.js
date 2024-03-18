@@ -4,6 +4,9 @@ const express = require("express");
 // create express application stored in the app variable
 const app = express();
 
+// to access data easily, we use express.json()
+app.use(express.json());
+
 // define basic api data
 let data = [
     {
@@ -69,7 +72,7 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 // @@ DELETE Request for single resource
-// @@ Route 'api/persons/:id'
+// @@ Route '/api/persons/:id'
 // @@ Response - 204 and .end() to transmit that no more data will be sent
 app.delete("/api/persons/:id", (request, response) => {
     // get the id from the request.params.id
@@ -78,7 +81,26 @@ app.delete("/api/persons/:id", (request, response) => {
     // iterate over api and filter the person with the id === id from params
     data = data.filter((person) => person.id !== id);
 
+    // we need to set a response, so it will be status 204 (no content) and end() which signals that no more data is sent with the response
     response.status(204).end();
+});
+
+// @@ POST request
+// @@ Route '/api/persons/'
+// @@ Response will be the new object created
+app.post("/api/persons", (request, response) => {
+    // we need the body request from request.body
+    const body = request.body;
+
+    // set the id of body with the length of data + 1
+    body.id = data.length + 1;
+
+    // add the body to the api with concat
+    data = data.concat(body);
+
+    // we need to respond to the request
+    // set the response of .json(body)
+    response.json(body);
 });
 
 // Define a port to listen to it
