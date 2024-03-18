@@ -4,7 +4,7 @@ const express = require("express");
 // create express application stored in the app variable
 const app = express();
 
-// to access data easily, we use express.json()
+// to access data easily (from request.body in POST request for example), we use express.json()
 app.use(express.json());
 
 // define basic api data
@@ -78,6 +78,8 @@ app.delete("/api/persons/:id", (request, response) => {
     // get the id from the request.params.id
     const id = Number(request.params.id);
 
+    // filter method keeps the items in the array that satisfy the condition
+    // keep the persons with the id !== with the id from the params
     // iterate over api and filter the person with the id === id from params
     data = data.filter((person) => person.id !== id);
 
@@ -105,7 +107,7 @@ app.post("/api/persons", (request, response) => {
 
     // check if name and number exists
     if (!body.name || !body.number) {
-        // return is essential otherwise the code will run until the end and execute other parts of it
+        // return is essential otherwise the code will run and execute until the end
         return response
             .status(400)
             .json({ error: "Name or number doesnt exist" });
@@ -113,11 +115,11 @@ app.post("/api/persons", (request, response) => {
         return response.status(400).json({ error: "Name must be unique" });
     } else {
         // add the body to the api with concat
-        data = data.concat(person);
+        data = data.concat(newPerson);
 
         // we need to respond to the request
         // set the response of .json(body)
-        response.json(person);
+        response.json(newPerson);
     }
 });
 
