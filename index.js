@@ -105,9 +105,12 @@ app.post("/api/persons", (request, response) => {
 
     // check if name and number exists
     if (!body.name || !body.number) {
-        response.status(400).json({ error: "Name or number doesnt exist" });
+        // return is essential otherwise the code will run until the end and execute other parts of it
+        return response
+            .status(400)
+            .json({ error: "Name or number doesnt exist" });
     } else if (nameExists) {
-        response.status(400).json({ error: "Name must be unique" });
+        return response.status(400).json({ error: "Name must be unique" });
     } else {
         // add the body to the api with concat
         data = data.concat(person);
