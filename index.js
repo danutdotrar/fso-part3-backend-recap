@@ -92,7 +92,13 @@ app.post("/api/persons", (request, response) => {
     // we need the body request from request.body
     const body = request.body;
     // set the id of body with the length of data + 1
-    body.id = data.length + 1;
+
+    // define new person with the body's keys and values
+    const newPerson = {
+        name: body.name,
+        number: body.number,
+        id: data.length + 1,
+    };
 
     // check if name already exists in api
     const nameExists = data.some((person) => person.name === body.name);
@@ -104,11 +110,11 @@ app.post("/api/persons", (request, response) => {
         response.status(400).json({ error: "Name must be unique" });
     } else {
         // add the body to the api with concat
-        data = data.concat(body);
+        data = data.concat(person);
 
         // we need to respond to the request
         // set the response of .json(body)
-        response.json(body);
+        response.json(person);
     }
 });
 
