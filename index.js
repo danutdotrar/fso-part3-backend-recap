@@ -91,16 +91,25 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
     // we need the body request from request.body
     const body = request.body;
-
     // set the id of body with the length of data + 1
     body.id = data.length + 1;
 
-    // add the body to the api with concat
-    data = data.concat(body);
+    // check if name already exists in api
+    const nameExists = data.some((person) => person.name === body.name);
 
-    // we need to respond to the request
-    // set the response of .json(body)
-    response.json(body);
+    // check if name and number exists
+    if (!body.name || !body.number) {
+        response.status(400).json({ error: "Name or number doesnt exist" });
+    } else if (nameExists) {
+        response.status(400).json({ error: "Name must be unique" });
+    } else {
+        // add the body to the api with concat
+        data = data.concat(body);
+
+        // we need to respond to the request
+        // set the response of .json(body)
+        response.json(body);
+    }
 });
 
 // Define a port to listen to it
