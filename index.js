@@ -1,11 +1,18 @@
 // import express
 const express = require("express");
 
+// import morgan middleware
+const morgan = require("morgan");
+
 // create express application stored in the app variable
 const app = express();
 
-// to access data easily (from request.body in POST request for example), we use express.json()
+// to access data easily (from request.body in POST request for example), we use express.json() which is a middleware
 app.use(express.json());
+
+app.use(
+    morgan(":method :url :status :res[content-length] - :response-time ms")
+);
 
 // define basic api data
 let data = [
@@ -91,7 +98,7 @@ app.delete("/api/persons/:id", (request, response) => {
 // @@ Route '/api/persons/'
 // @@ Response will be the new object created
 app.post("/api/persons", (request, response) => {
-    // we need the body request from request.body
+    // we need the body request from request.body (use express.json() to access it)
     const body = request.body;
     // set the id of body with the length of data + 1
 
@@ -123,9 +130,27 @@ app.post("/api/persons", (request, response) => {
     }
 });
 
+// catch request to non-existing routes
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
 // Define a port to listen to it
 const PORT = 3001;
 
 // Listen to the port
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
+
+// HTTP standard vorbeste despre 2 proprietati, safety si idempotency.
+// Safety se refera la faptul ca datele nu sunt schimbate in urma requestului (**GET**)
+// Idempotency se refera la faptul ca oricate requesturi ar fi facute, rezultatul este acelasi (de exemplu, GET, PUT, DELETE, HEAD).
+// POST nu are proprietatea safety si nu este idempotent, deoarece schimba datele (not safety) si schimba si rezultatul cu fiecare request facut (not idempotent)
+
+// Middleware sunt functii care sunt folosite pentru gestionarea obiectelor request si response
+// Middleware are 3 parametrii, request, response si next
+// Functiile middleware sunt apelate in ordinea in care sunt folosite cu metoda use (app.use(nmiddleware)) a express server-ului
+// Json parser-ul trebuie actionat prima data, ca sa putem folosi functiile middleware
+// Middleware trebuie sa fie folosite inaintea routes daca vrem sa fie executate inaintea route event handler.
