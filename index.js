@@ -10,8 +10,13 @@ const app = express();
 // to access data easily (from request.body in POST request for example), we use express.json() which is a middleware
 app.use(express.json());
 
+// define a custom token to log request body
+morgan.token("req-body", (req, res) => JSON.stringify(req.body));
+
 app.use(
-    morgan(":method :url :status :res[content-length] - :response-time ms")
+    morgan(
+        ":method :url :status :res[content-length] - :response-time ms - Body: :req-body"
+    )
 );
 
 // define basic api data
