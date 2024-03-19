@@ -13,6 +13,7 @@ app.use(express.json());
 // define a custom token to log request body
 morgan.token("req-body", (req, res) => JSON.stringify(req.body));
 
+// use morgan with string
 app.use(
     morgan(
         ":method :url :status :res[content-length] - :response-time ms - Body: :req-body"
