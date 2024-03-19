@@ -4,8 +4,14 @@ const express = require("express");
 // import morgan middleware
 const morgan = require("morgan");
 
+// import cors
+const cors = require("cors");
+
 // create express application stored in the app variable
 const app = express();
+
+// use cors
+app.use(cors());
 
 // to access data easily (from request.body in POST request for example), we use express.json() which is a middleware
 app.use(express.json());
