@@ -1,3 +1,8 @@
+require("dotenv").config();
+
+// import the Person model
+const Person = require("./models/person");
+
 // import express
 const express = require("express");
 
@@ -57,8 +62,11 @@ app.get("/", (request, response) => {
 
 // set api url to api data
 app.get("/api/persons", (request, response) => {
-    // set the api with response.json()
-    response.json(data);
+    // find in the database the persons
+    Person.find({}).then((result) => {
+        // set the api with response.json()
+        response.json(result);
+    });
 });
 
 // @@ GET Request
@@ -150,7 +158,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 // Define a port to listen to it
-const PORT = 3001;
+const PORT = process.env.PORT;
 
 // Listen to the port
 app.listen(PORT);
