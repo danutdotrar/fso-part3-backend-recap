@@ -18,7 +18,7 @@ mongoose
 // define the schema - schema will tell mongodb how the objects are structured in the db
 const personSchema = new mongoose.Schema({
     name: String,
-    number: Number,
+    number: String,
 });
 
 // format the returned schema

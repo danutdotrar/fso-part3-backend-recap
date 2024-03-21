@@ -69,6 +69,52 @@ app.get("/api/persons", (request, response) => {
     });
 });
 
+// @@ POST request
+// @@ Route '/api/persons/'
+// @@ Response will be the new object created
+app.post("/api/persons", (request, response) => {
+    // we need the body request from request.body (use express.json() to access it)
+    const body = request.body;
+
+    // define new person based on the model Person
+    const person = new Person({
+        name: body.name,
+        number: body.number,
+    });
+
+    // save the person to the db with the save()
+    person.save().then((savedPerson) => {
+        response.json(savedPerson);
+    });
+
+    // // define new person with the body's keys and values
+    // const newPerson = {
+    //     name: body.name,
+    //     number: body.number,
+    //     id: data.length + 1,
+    // };
+
+    // // check if name already exists in api
+    // const nameExists = data.some((person) => person.name === body.name);
+
+    // // check if name and number exists
+    // if (!body.name || !body.number) {
+    //     // return is essential otherwise the code will run and execute until the end
+    //     return response
+    //         .status(400)
+    //         .json({ error: "Name or number doesnt exist" });
+    // } else if (nameExists) {
+    //     return response.status(400).json({ error: "Name must be unique" });
+    // } else {
+    //     // add the body to the api with concat
+    //     data = data.concat(newPerson);
+
+    //     // we need to respond to the request
+    //     // set the response of .json(body)
+    //     response.json(newPerson);
+    // }
+});
+
 // @@ GET Request
 // @@ Route '/info'
 app.get("/info", (request, response) => {
@@ -112,42 +158,6 @@ app.delete("/api/persons/:id", (request, response) => {
 
     // we need to set a response, so it will be status 204 (no content) and end() which signals that no more data is sent with the response
     response.status(204).end();
-});
-
-// @@ POST request
-// @@ Route '/api/persons/'
-// @@ Response will be the new object created
-app.post("/api/persons", (request, response) => {
-    // we need the body request from request.body (use express.json() to access it)
-    const body = request.body;
-    // set the id of body with the length of data + 1
-
-    // define new person with the body's keys and values
-    const newPerson = {
-        name: body.name,
-        number: body.number,
-        id: data.length + 1,
-    };
-
-    // check if name already exists in api
-    const nameExists = data.some((person) => person.name === body.name);
-
-    // check if name and number exists
-    if (!body.name || !body.number) {
-        // return is essential otherwise the code will run and execute until the end
-        return response
-            .status(400)
-            .json({ error: "Name or number doesnt exist" });
-    } else if (nameExists) {
-        return response.status(400).json({ error: "Name must be unique" });
-    } else {
-        // add the body to the api with concat
-        data = data.concat(newPerson);
-
-        // we need to respond to the request
-        // set the response of .json(body)
-        response.json(newPerson);
-    }
 });
 
 // catch request to non-existing routes
