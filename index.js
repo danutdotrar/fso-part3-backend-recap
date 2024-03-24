@@ -128,11 +128,15 @@ app.post("/api/persons", (request, response) => {
 // @@ Route '/info'
 app.get("/info", (request, response) => {
     const date = new Date();
-    const infoData = `<p>Phonebook has info for ${data.length} people</p>
-    <p>${date}</p>`;
 
-    // send the info data with the response
-    response.send(infoData);
+    Person.find({}).then((result) => {
+        const numberOfPersons = result.length;
+        const infoData = `<p>Phonebook has info for ${numberOfPersons} people</p>
+        <p>${date}</p>`;
+
+        // send the info data with the response
+        response.send(infoData);
+    });
 });
 
 // @@ GET Request for single resource
