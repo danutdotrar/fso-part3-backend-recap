@@ -37,6 +37,10 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).json({ error: "malformatted id" });
     }
 
+    if (error.name === "ValidationError") {
+        return response.status(400).json({ error: error.message });
+    }
+
     next(error);
 };
 
@@ -81,7 +85,7 @@ app.get("/api/persons", (request, response) => {
 // @@ POST request
 // @@ Route '/api/persons/'
 // @@ Response will be the new object created
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
     // we need the body request from request.body (use express.json() to access it)
     const body = request.body;
 
@@ -92,9 +96,12 @@ app.post("/api/persons", (request, response) => {
     });
 
     // save the person to the db with the save()
-    person.save().then((result) => {
-        response.json(result);
-    });
+    person
+        .save()
+        .then((result) => {
+            response.json(result);
+        })
+        .catch((error) => next(error));
 
     // // define new person with the body's keys and values
     // const newPerson = {
