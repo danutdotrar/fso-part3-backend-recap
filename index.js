@@ -31,6 +31,15 @@ app.use(
     )
 );
 
+// define error handler with next
+const errorHandler = (error, request, response, next) => {
+    if (error.name === "CastError") {
+        return response.status(400).json({ error: "malformatted id" });
+    }
+
+    next(error);
+};
+
 // define basic api data
 let data = [
     {
@@ -147,25 +156,33 @@ app.get("/api/persons/:id", (request, response) => {
 // @@ DELETE Request for single resource
 // @@ Route '/api/persons/:id'
 // @@ Response - 204 and .end() to transmit that no more data will be sent
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
     // get the id from the request.params.id
-    const id = Number(request.params.id);
+    const id = request.params.id;
 
     // filter method keeps the items in the array that satisfy the condition
     // keep the persons with the id !== with the id from the params
     // iterate over api and filter the person with the id === id from params
-    data = data.filter((person) => person.id !== id);
+    // data = data.filter((person) => person.id !== id);
 
-    // we need to set a response, so it will be status 204 (no content) and end() which signals that no more data is sent with the response
-    response.status(204).end();
+    // use Person model and findByIdAndDelete
+    Person.findByIdAndDelete(id)
+        .then((result) => {
+            // we need to set a response, so it will be status 204 (no content) and end() which signals that no more data is sent with the response
+            response.status(204).end();
+        })
+        .catch((error) => {
+            next(error);
+        });
 });
 
 // catch request to non-existing routes
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: "unknown endpoint" });
-};
+// const unknownEndpoint = (request, response) => {
+//     response.status(404).send({ error: "unknown endpoint" });
+// };
 
-app.use(unknownEndpoint);
+// app.use(unknownEndpoint);
+app.use(errorHandler);
 
 // Define a port to listen to it
 const PORT = process.env.PORT;
