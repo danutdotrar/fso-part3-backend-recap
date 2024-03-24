@@ -92,8 +92,8 @@ app.post("/api/persons", (request, response) => {
     });
 
     // save the person to the db with the save()
-    person.save().then((savedPerson) => {
-        response.json(savedPerson);
+    person.save().then((result) => {
+        response.json(result);
     });
 
     // // define new person with the body's keys and values
@@ -137,20 +137,31 @@ app.get("/info", (request, response) => {
 
 // @@ GET Request for single resource
 // @@ Route '/api/persons/:id'
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
     // get the id from the url params to search it in the api
-    const id = Number(request.params.id);
+    const id = request.params.id;
 
     // find the resource in the api with the params id === resource id
-    const singleResource = data.find((person) => person.id === id);
+    // const singleResource = data.find((person) => person.id === id);
+    Person.findById(id)
+        .then((person) => {
+            if (person) {
+                response.json(person);
+            } else {
+                return response.status(404).end();
+            }
+        })
+        .catch((error) => {
+            next(error);
+        });
 
     // if the resource exists, send the json with that resource
-    if (singleResource) {
-        // show that singleResource with response.json()
-        response.json(singleResource);
-    } else {
-        response.status(404).end();
-    }
+    // if (singleResource) {
+    // show that singleResource with response.json()
+    // response.json(singleResource);
+    // } else {
+    // response.status(404).end();
+    // }
 });
 
 // @@ DELETE Request for single resource
