@@ -164,6 +164,29 @@ app.get("/api/persons/:id", (request, response, next) => {
     // }
 });
 
+// @@ UPDATE request for single resource
+// @@ Route '/api/persons/:id'
+// @@ return the updated person
+app.put("/api/persons/:id", (request, response) => {
+    // get the id from the url
+    const id = request.params.id;
+
+    // get the body
+    const body = request.body;
+
+    // define a new updated obj with the data from the body req
+    const updatedPerson = {
+        name: body.name,
+        number: body.number,
+    };
+
+    Person.findByIdAndUpdate(id, updatedPerson, { new: true }).then(
+        (result) => {
+            response.json(result);
+        }
+    );
+});
+
 // @@ DELETE Request for single resource
 // @@ Route '/api/persons/:id'
 // @@ Response - 204 and .end() to transmit that no more data will be sent
