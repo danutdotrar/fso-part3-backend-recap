@@ -191,11 +191,12 @@ app.put("/api/persons/:id", (request, response) => {
         number: body.number,
     };
 
-    Person.findByIdAndUpdate(id, updatedPerson, { new: true }).then(
-        (result) => {
-            response.json(result);
-        }
-    );
+    Person.findByIdAndUpdate(id, updatedPerson, {
+        new: true,
+        runValidators: true,
+    }).then((result) => {
+        response.json(result);
+    });
 });
 
 // @@ DELETE Request for single resource
